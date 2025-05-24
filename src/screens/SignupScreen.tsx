@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Text } from "react-native-paper";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
+require("dotenv").config();
 
 type SignupScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -16,20 +16,27 @@ interface Props {
 
 const SignupScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignup = async () => {
     try {
+      if (!name || !email || !password) {
+        return Alert.alert("Error", "All fields are required.");
+      }
       const response = await axios.post(
         "http://localhost:3000/api/auth/signup",
         {
           email,
           password,
+          name,
         }
       );
-      alert(
-        "Signup successful! Please check your email to verify your account."
+      Alert.alert(
+        "Success",
+        response.data.message || "Signup successful! Please verify your email."
       );
+
       navigation.navigate("Login");
     } catch (err: any) {
       alert("Signup failed: " + (err.response?.data?.message || err.message));
@@ -38,32 +45,48 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text variant="headlineMedium">Signup</Text>
+      <Text style={styles.title}>Create Account</Text>
+
       <TextInput
-        label="Email"
+        placeholder="Full Name"
+        value={name}
+        onChangeText={setName}
+        style={styles.input}
+        autoCapitalize="words"
+      />
+
+      <TextInput
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        style={styles.input}
+        keyboardType="email-address"
         autoCapitalize="none"
       />
+
       <TextInput
-        label="Password"
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
+        style={styles.input}
         secureTextEntry
       />
-      <Button mode="contained" onPress={handleSignup} style={styles.button}>
-        Sign Up
-      </Button>
-      <Button onPress={() => navigation.navigate("Login")}>
-        Back to Login
-      </Button>
+
+      <Button title="Sign Up" onPress={handleSignup} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  button: { marginTop: 16 },
+  container: { flex: 1, padding: 20, justifyContent: "center" },
+  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 12,
+    marginBottom: 15,
+    borderRadius: 5,
+  },
 });
 
 export default SignupScreen;
