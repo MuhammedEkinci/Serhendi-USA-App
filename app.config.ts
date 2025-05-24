@@ -1,6 +1,12 @@
 import "dotenv/config";
 
-export default ({ config }) => {
+type CustomConfigContext = {
+  config: {
+    [key: string]: any;
+  };
+};
+
+export default ({ config }: CustomConfigContext) => {
   return {
     ...config,
     extra: {
