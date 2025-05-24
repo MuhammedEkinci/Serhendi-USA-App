@@ -4,7 +4,7 @@ import { TextInput, Button, Text, useTheme, Card } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
-require("dotenv").config();
+import Constants from "expo-constants";
 
 type ForgotPasswordNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -18,10 +18,13 @@ interface Props {
 const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState("");
 
+  // How to get .env variables in react native
+  const { LOGIN_SERVER_URL } = Constants.expoConfig?.extra || {};
+
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        `${process.env.LOGIN_SERVER_URL}/api/auth/forgot-password`,
+        `${LOGIN_SERVER_URL}/api/auth/forgot-password`,
         {
           email,
         }

@@ -4,7 +4,7 @@ import { TextInput, Button, Text, useTheme, Card } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
-require("dotenv").config();
+import Constants from "expo-constants";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -19,15 +19,14 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const { LOGIN_SERVER_URL } = Constants.expoConfig?.extra || {};
+
   const handleLogin = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.LOGIN_SERVER_URL}/api/auth/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const res = await axios.post(`${LOGIN_SERVER_URL}/api/auth/login`, {
+        email,
+        password,
+      });
       alert("Login success! Token: " + res.data.token);
     } catch (err: any) {
       alert("Login failed: " + (err.response?.data?.message || err.message));
