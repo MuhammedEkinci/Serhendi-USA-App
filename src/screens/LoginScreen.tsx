@@ -55,6 +55,9 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       <Button onPress={() => navigation.navigate("Signup")}>
         Go to Signup
       </Button>
+      <Button onPress={() => navigation.navigate("ForgotPassword")}>
+        Forgot your password?
+      </Button>
     </View>
   );
 };
