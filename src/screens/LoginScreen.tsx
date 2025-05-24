@@ -4,6 +4,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
+require("dotenv").config();
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -20,10 +21,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${process.env.LOGIN_SERVER_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
       alert("Login success! Token: " + res.data.token);
     } catch (err: any) {
       alert("Login failed: " + (err.response?.data?.message || err.message));

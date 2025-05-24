@@ -4,6 +4,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
+require("dotenv").config();
 
 type ForgotPasswordNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -20,7 +21,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/forgot-password",
+        `${process.env.LOGIN_SERVER_URL}/api/auth/forgot-password`,
         {
           email,
         }
