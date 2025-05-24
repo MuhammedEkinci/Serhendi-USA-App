@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Button, Text } from "react-native-paper";
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import { TextInput, Button, Text, useTheme, Card } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
@@ -34,31 +34,86 @@ const ForgotPasswordScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text variant="headlineMedium">Reset Password</Text>
-      <TextInput
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-      <Button
-        mode="contained"
-        onPress={handleForgotPassword}
-        style={styles.button}
-      >
-        Send Reset Link
-      </Button>
-      <Button onPress={() => navigation.navigate("Login")}>
-        Back to Login
-      </Button>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={styles.outerContainer}
+    >
+      <Card mode="elevated" style={styles.card}>
+        <Card.Content>
+          <Text variant="headlineMedium" style={styles.title}>
+            Forgot your password?
+          </Text>
+          <Text variant="bodyMedium" style={styles.subtitle}>
+            Enter the email associated with your account and we’ll send a link
+            to reset your password.
+          </Text>
+
+          <TextInput
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            style={styles.input}
+          />
+
+          <Button
+            mode="contained"
+            onPress={handleForgotPassword}
+            style={styles.button}
+            contentStyle={styles.buttonContent}
+          >
+            Send Reset Link
+          </Button>
+
+          <Button
+            mode="text"
+            onPress={() => navigation.navigate("Login")}
+            style={styles.backButton}
+          >
+            Back to Login
+          </Button>
+        </Card.Content>
+      </Card>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
-  button: { marginTop: 16 },
+  outerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+  },
+  card: {
+    borderRadius: 12,
+    paddingVertical: 24,
+  },
+  title: {
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  subtitle: {
+    marginBottom: 24,
+    textAlign: "center",
+    color: "#555",
+  },
+  input: {
+    marginBottom: 16,
+    backgroundColor: "white",
+  },
+  button: {
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  buttonContent: {
+    paddingVertical: 6,
+  },
+  backButton: {
+    alignSelf: "center",
+    marginTop: 8,
+  },
 });
 
 export default ForgotPasswordScreen;
