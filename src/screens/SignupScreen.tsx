@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { TextInput, Button, Text, Card } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
@@ -25,7 +32,7 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
         return Alert.alert("Error", "All fields are required.");
       }
       const response = await axios.post(
-        "http://localhost:3000/api/auth/signup",
+        `${process.env.LOGIN_SERVER_URL}/api/auth/signup`,
         {
           email,
           password,
@@ -44,48 +51,100 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={styles.outerContainer}
+    >
+      <Card mode="elevated" style={styles.card}>
+        <Card.Content>
+          <Text variant="headlineMedium" style={styles.title}>
+            Create Account
+          </Text>
+          <Text variant="bodyMedium" style={styles.subtitle}>
+            Sign up to get started
+          </Text>
 
-      <TextInput
-        placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-        autoCapitalize="words"
-      />
+          <TextInput
+            label="Full Name"
+            value={name}
+            onChangeText={setName}
+            style={styles.input}
+            autoCapitalize="words"
+          />
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+          <TextInput
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
+          <TextInput
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            secureTextEntry
+          />
 
-      <Button title="Sign Up" onPress={handleSignup} />
-    </View>
+          <Button
+            mode="contained"
+            onPress={handleSignup}
+            style={styles.button}
+            contentStyle={styles.buttonContent}
+          >
+            Sign Up
+          </Button>
+
+          <Button
+            mode="text"
+            onPress={() => navigation.navigate("Login")}
+            style={styles.linkButton}
+          >
+            Already have an account? Log in
+          </Button>
+        </Card.Content>
+      </Card>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, justifyContent: "center" },
-  title: { fontSize: 24, marginBottom: 20, textAlign: "center" },
+  outerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 16,
+  },
+  card: {
+    borderRadius: 12,
+    paddingVertical: 24,
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  subtitle: {
+    textAlign: "center",
+    color: "#666",
+    marginBottom: 24,
+  },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    marginBottom: 15,
-    borderRadius: 5,
+    marginBottom: 16,
+    backgroundColor: "white",
+  },
+  button: {
+    marginTop: 8,
+    borderRadius: 8,
+  },
+  buttonContent: {
+    paddingVertical: 6,
+  },
+  linkButton: {
+    alignSelf: "center",
+    marginTop: 16,
   },
 });
 
