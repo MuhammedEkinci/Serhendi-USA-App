@@ -10,7 +10,7 @@ import { TextInput, Button, Text, Card } from "react-native-paper";
 import axios from "axios";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
-require("dotenv").config();
+import Constants from "expo-constants";
 
 type SignupScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,19 +26,18 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
+  const { LOGIN_SERVER_URL } = Constants.expoConfig?.extra || {};
+
   const handleSignup = async () => {
     try {
       if (!name || !email || !password) {
         return Alert.alert("Error", "All fields are required.");
       }
-      const response = await axios.post(
-        `${process.env.LOGIN_SERVER_URL}/api/auth/signup`,
-        {
-          email,
-          password,
-          name,
-        }
-      );
+      const response = await axios.post(`${LOGIN_SERVER_URL}/api/auth/signup`, {
+        email,
+        password,
+        name,
+      });
       Alert.alert(
         "Success",
         response.data.message || "Signup successful! Please verify your email."
