@@ -33,6 +33,7 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
       if (!name || !email || !password) {
         return Alert.alert("Error", "All fields are required.");
       }
+
       const response = await axios.post(`${LOGIN_SERVER_URL}/api/auth/signup`, {
         email,
         password,
